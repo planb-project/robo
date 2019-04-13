@@ -7,35 +7,20 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what
-PSRs you support to avoid any confusion with users and contributors.
-
-## Structure
-
-If any of the following are applicable to your project, then the directory structure should follow industry best practices by being named the following.
-
-```
-bin/        
-config/
-src/
-tests/
-vendor/
-```
-
+custom cli task manager based on robo
 
 ## Install
 
 Via Composer
 
 ``` bash
-$ composer require PlanB/robo
+$ composer require planb/robo
 ```
 
 ## Usage
 
 ``` php
-$skeleton = new League\Skeleton();
-echo $skeleton->echoPhrase('Hello, League!');
+ -- Aqui las directrices de uso --    
 ```
 
 ## Change log
@@ -45,7 +30,8 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 ## Testing
 
 ``` bash
-$ composer test
+$ bin/behat
+$ bin/phpspec
 ```
 
 ## Contributing
@@ -65,17 +51,17 @@ If you discover any security related issues, please email jmpantoja@gmail.com in
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/PlanB/robo.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/planb/robo.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/PlanB/robo/master.svg?style=flat-square
-[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/PlanB/robo.svg?style=flat-square
-[ico-code-quality]: https://img.shields.io/scrutinizer/g/PlanB/robo.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/PlanB/robo.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/planb/robo/master.svg?style=flat-square
+[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/planb/robo.svg?style=flat-square
+[ico-code-quality]: https://img.shields.io/scrutinizer/g/planb/robo.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/planb/robo.svg?style=flat-square
 
-[link-packagist]: https://packagist.org/packages/PlanB/robo
-[link-travis]: https://travis-ci.org/PlanB/robo
-[link-scrutinizer]: https://scrutinizer-ci.com/g/PlanB/robo/code-structure
-[link-code-quality]: https://scrutinizer-ci.com/g/PlanB/robo
-[link-downloads]: https://packagist.org/packages/PlanB/robo
-[link-author]: https://github.com/:author_username
+[link-packagist]: https://packagist.org/packages/planb/robo
+[link-travis]: https://travis-ci.org/planb/robo
+[link-scrutinizer]: https://scrutinizer-ci.com/g/planb/robo/code-structure
+[link-code-quality]: https://scrutinizer-ci.com/g/planb/robo
+[link-downloads]: https://packagist.org/packages/planb/robo
+[link-author]: https://github.com/planb-project/
 [link-contributors]: ../../contributors

@@ -28,9 +28,16 @@ ENV COMPOSER_CACHE_DIR=/global/cache
 ENV COMPOSER_HOME=/global/composer
 RUN composer global require hirak/prestissimo
 
+RUN composer global require webmozart/assert \
+                            ramsey/uuid \
+                            marc-mabe/php-enum \
+                            symfony/var-dumper \
+                            phpspec/phpspec \
+                            behat/behat \
+                            memio/spec-gen \
+                            ciaranmcnulty/phpspec-typehintedmethods
+
 RUN chmod -R 777 /global
-
-
 
 RUN mkdir /main
 WORKDIR /main

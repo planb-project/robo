@@ -1,4 +1,4 @@
-# :package_name
+# :package_fullname
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
@@ -7,35 +7,20 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what
-PSRs you support to avoid any confusion with users and contributors.
-
-## Structure
-
-If any of the following are applicable to your project, then the directory structure should follow industry best practices by being named the following.
-
-```
-bin/        
-config/
-src/
-tests/
-vendor/
-```
-
+:package_description
 
 ## Install
 
 Via Composer
 
 ``` bash
-$ composer require :vendor/:package_name
+$ composer require :package_fullname
 ```
 
 ## Usage
 
 ``` php
-$skeleton = new League\Skeleton();
-echo $skeleton->echoPhrase('Hello, League!');
+ -- Aqui las directrices de uso --    
 ```
 
 ## Change log
@@ -45,7 +30,8 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 ## Testing
 
 ``` bash
-$ composer test
+$ bin/behat
+$ bin/phpspec
 ```
 
 ## Contributing
@@ -63,19 +49,19 @@ If you discover any security related issues, please email :author_email instead 
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The MIT License (:license). Please see [License File](LICENSE.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/:vendor/:package_name.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/:package_fullname.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/:vendor/:package_name/master.svg?style=flat-square
-[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/:vendor/:package_name.svg?style=flat-square
-[ico-code-quality]: https://img.shields.io/scrutinizer/g/:vendor/:package_name.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/:vendor/:package_name.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/:package_fullname/master.svg?style=flat-square
+[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/:package_fullname.svg?style=flat-square
+[ico-code-quality]: https://img.shields.io/scrutinizer/g/:package_fullname.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/:package_fullname.svg?style=flat-square
 
-[link-packagist]: https://packagist.org/packages/:vendor/:package_name
-[link-travis]: https://travis-ci.org/:vendor/:package_name
-[link-scrutinizer]: https://scrutinizer-ci.com/g/:vendor/:package_name/code-structure
-[link-code-quality]: https://scrutinizer-ci.com/g/:vendor/:package_name
-[link-downloads]: https://packagist.org/packages/:vendor/:package_name
-[link-author]: https://github.com/:author_username
+[link-packagist]: https://packagist.org/packages/:package_fullname
+[link-travis]: https://travis-ci.org/:package_fullname
+[link-scrutinizer]: https://scrutinizer-ci.com/g/:package_fullname/code-structure
+[link-code-quality]: https://scrutinizer-ci.com/g/:package_fullname
+[link-downloads]: https://packagist.org/packages/:package_fullname
+[link-author]: :author_website
 [link-contributors]: ../../contributors

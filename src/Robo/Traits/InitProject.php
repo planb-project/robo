@@ -67,13 +67,11 @@ trait InitProject
      * Inicializa composer con las dependencias minimas
      *
      * @param \Robo\Collection\CollectionBuilder $collection
+     *
+     * @throws \Robo\Exception\TaskException
      */
     protected function initComposer(CollectionBuilder $collection): void
     {
-        $collection->addTaskList([
-            $this->taskComposerValidate(),
-        ]);
-
         $devPackages = $this->getDevPackages();
         $packages = $this->getPackages();
 
@@ -94,6 +92,7 @@ trait InitProject
     {
         $collection->addTaskList([
             $this->taskComposerUpdate(),
+            $this->taskComposerValidate(),
         ]);
     }
 
@@ -152,7 +151,7 @@ trait InitProject
     protected function initBehat(CollectionBuilder $collection): void
     {
         $taskList = [
-            $this->taskComposerRequire()->dependency('behat/behat'),
+            $this->taskComposerRequire()->dependency('behat/behat')->dev(),
 
             $this->taskBoilerplate()
                 ->file('@config/templates/behat.yml', '@/behat.yml'),
@@ -174,7 +173,17 @@ trait InitProject
     protected function initPhpSpec(CollectionBuilder $collection): void
     {
         $taskList = [
-            $this->requireDevDependency(['phpspec/phpspec']),
+
+            $this->taskComposerConfig()
+                ->repository(0, 'https://github.com/shulard/phpspec-code-coverage.git', 'vcs'),
+
+            $this->taskComposerRequire()
+                ->dev()
+                ->dependency('phpspec/phpspec')
+                ->dependency('memio/spec-gen')
+                ->dependency('ciaranmcnulty/phpspec-typehintedmethods')
+                ->dependency('leanphp/phpspec-code-coverage', 'dev-upgrade'),
+
 
             $this->taskBoilerplate()
                 ->dir('@/.phpspec')

@@ -106,6 +106,8 @@ class Context implements \IteratorAggregate
      */
     private function autoComplete(): void
     {
+        $this->set('year', date('Y'));
+
         $matches = [];
         $name = $this->values[':package_name'] ?? '';
 
@@ -114,6 +116,7 @@ class Context implements \IteratorAggregate
         }
 
         [, $vendor, $package] = $matches;
+
         $this->addValues($vendor, $package);
     }
 
@@ -133,6 +136,10 @@ class Context implements \IteratorAggregate
 
         $this->set('vendor', $vendor);
         $this->set('package_name', $package);
+
+        $fullName = strtolower(sprintf('%s/%s', $vendor, $package));
+        $this->set('package_fullname', $fullName);
+
 
         $package = $this->normalize($package);
 
