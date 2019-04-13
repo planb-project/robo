@@ -1,0 +1,42 @@
+{% extends "layout/layout.twig" %}
+{% from "macros.twig" import list, deprecated, table, short, long, signature, hint_link %}
+
+
+{% block page_content %}
+{% set className = class.name|split('\\')|last|raw %}
+
+# {{ className }}
+{{ deprecated(class) }}
+
+> {{ class.shortdesc|desc(class) }}
+>
+> {{ class.longdesc|desc(class) }}
+
+
+{{ list('Traits', traits) }}
+
+{{ list('Constants', constants) }}
+
+{{ list('Properties', properties) }}
+
+## Methods
+{% for method in methods %}
+
+### {{ method.name }}
+{{ long(method) }}
+
+{{ signature(className, method) }}
+
+
+{% if method.parameters %}
+|Parameters: | | |
+| --- | --- | --- |
+{% for parameter in method.parameters %}
+|{% if parameter.hint %}{{ hint_link(parameter.hint) }}{% endif %} | {%- if parameter.variadic %}...{% endif %}${{ parameter.name|raw }} | {{ parameter.shortdesc|desc(class) }} |
+{% endfor %}
+{% endif %}
+
+---
+
+{% endfor %}
+{% endblock %}

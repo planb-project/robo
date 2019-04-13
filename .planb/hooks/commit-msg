@@ -1,0 +1,25 @@
+#!/bin/bash
+
+commit_regex='(^Merge branch .*)'
+
+if grep -iqE "$commit_regex" "$1"; then
+	exit 0
+fi
+
+commit_regex='(^[tag|release|hotfix] .* created)'
+
+if grep -iqE "$commit_regex" "$1"; then
+	exit 0
+fi
+
+commit_regex='(Issue #[0-9]+\. .*)'
+error_msg="Aborting commit. Your commit message is missing either a Issue number ('Issue #1111. <message>')"
+
+if ! grep -iqE "$commit_regex" "$1"; then
+	RED='\033[1;31m'
+	NC='\033[0m' # No Color
+	printf "${RED}$error_msg${NC}\n" >&2
+	exit 1
+fi
+
+exit 0

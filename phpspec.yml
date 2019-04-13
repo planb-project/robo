@@ -1,0 +1,9 @@
+formatter.name: pretty
+
+suites:
+    main:
+        spec_prefix: Spec
+        namespace: PlanB
+        psr4_prefix: PlanB
+        src_path: '%paths.config%/src'
+        spec_path: '%paths.config%/tests'

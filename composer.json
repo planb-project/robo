@@ -1,0 +1,54 @@
+{
+    "name": "planb/robo",
+    "description": "custom cli task manager based on robo",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jose Manuel Pantoja",
+            "email": "jmpantoja@gmail.com",
+            "homepage": "https://github.com/planb-project/"
+        }
+    ],
+    "require": {
+        "behat/behat": "^3.5",
+        "composer/composer": "^1.8",
+        "consolidation/robo": "^1.4",
+        "edgedesign/phpqa": "^1.20",
+        "escapestudios/symfony2-coding-standard": "^3.5",
+        "globalis/robo-task": "^1.1",
+        "henrikbjorn/lurker": "^1.2",
+        "jakub-onderka/php-console-highlighter": "^0.4.0",
+        "jakub-onderka/php-parallel-lint": "^1.0",
+        "league/climate": "^3.5",
+        "league/tactician": "^1.0",
+        "marc-mabe/php-enum": "^3.1",
+        "ramsey/uuid": "^3.8",
+        "sensiolabs/security-checker": "^5.0",
+        "slevomat/coding-standard": "^5.0",
+        "symfony/property-access": "^4.2",
+        "symfony/validator": "^4.2",
+        "webmozart/assert": "^1.4",
+        "webmozart/path-util": "^2.3"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "^5.1",
+        "symfony/var-dumper": "^4.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "PlanB\\QA\\": "src/QA/",
+            "PlanB\\Robo\\": "src/Robo/"
+        }
+    },
+    "config": {
+        "bin-dir": "bin",
+        "optimize-autoloader": true,
+        "sort-packages": true,
+        "apcu-autoloader": true
+    },
+    "extra": {
+        "github_organization": "planb-project",
+        "github_repository": "robo"
+    }
+}

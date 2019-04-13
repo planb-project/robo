@@ -1,0 +1,97 @@
+{% macro md(reflection) %}
+{{ namespace_path(reflection) | replace({'.html':'.md'}) -}}
+{% endmacro %}
+
+{% macro link(reflection) -%}
+    {% from _self import md %}
+[{{ reflection|raw }}]({{ md(reflection) }})
+{%- endmacro %}
+
+{% macro list(title, items) -%}
+{% from _self import link %}
+{% if items %}
+## {{ title }}
+{% for item in items %}
+{% if item.name is defined %}
+- {{ item.name }}
+{% else %}
+- {{ item }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{%- endmacro %}
+
+
+{% macro links(title, items) -%}
+{% from _self import link %}
+{% if items %}
+## {{ title }}
+{% for item in items %}
+- {{ link(item) }}
+{% endfor %}
+{% endif %}
+{%- endmacro %}
+
+{% macro table(title, items) -%}
+{% from _self import link, short, long %}
+{% if items %}
+## {{ title }}
+| | |
+| --- | --- |
+{% for item in items %}
+| {{ link(item) }} | {{ short(item) }} |
+{% endfor %}
+{% endif %}
+{%- endmacro %}
+
+{% macro short(reflection) %}
+{% if reflection.shortdesc is defined %}{{ reflection.shortdesc|raw }}{% endif %}
+{% endmacro %}
+
+{% macro long(reflection) %}
+{% if reflection.shortdesc is defined %}{{ reflection.shortdesc|raw }}{% endif %}
+
+{% if reflection.longdesc is defined %}{{ reflection.longdesc|raw }}{% endif %}
+{% endmacro %}
+
+{% macro deprecated(reflection) %}
+{% if reflection.deprecated %}_deprecated_{% endif %}
+{% endmacro %}
+
+
+{% macro signature(className, method) -%}
+{%- from _self import hint_link, params %}
+{% if method.final %}final {% endif %}
+{% if method.abstract %}abstract {% endif %}
+{% if method.static %}static {% endif %}
+{% if method.protected %}protected {% endif %}
+{% if method.private %}private {% endif %}
+**{{- className }}::{{ method.name|raw }}**{{ params(method) }} : {{ hint_link (method.hint) }}
+{%- endmacro%}
+
+{% macro hint_link(hints) -%}
+    {%- from _self import link %}
+    {%- if hints %}
+        {%- for hint in hints %}
+            {%- if hint.class %}
+                {{- link(hint.name|split('\\')|last|raw) }} 
+            {%- elseif hint.name %} 
+                {{- hint.name }} 
+            {%- endif %}
+                {%- if hint.array %}[]{% endif %}
+                {%- if not loop.last %}|{% endif %}
+        {%- endfor %}
+    {%- endif %}
+{%- endmacro %}
+
+{% macro params(method) -%}
+    {%- from _self import hint_link -%}
+    (
+        {%- for parameter in method.parameters %}
+            {%- if parameter.hashint %}{{ hint_link(parameter.hint) }} {% endif -%}
+            {%- if parameter.variadic %}...{% endif %}${{ parameter.name|raw }}
+            {%- if parameter.default is not null %} = {{ parameter.default }}{% endif %}
+            {%- if not loop.last %}, {% endif %}
+        {%- endfor -%}
+    )
+{%- endmacro %}

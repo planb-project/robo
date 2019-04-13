@@ -1,0 +1,9 @@
+default:
+    autoload:
+        '': '%paths.base%/tests'
+    suites:
+        main:
+            paths:
+            - '%paths.base%/tests/Acceptance/Features'
+            contexts:
+            - Acceptance\Context\MainContext
