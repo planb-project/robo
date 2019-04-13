@@ -13,9 +13,11 @@ declare(strict_types=1);
 
 namespace PlanB\Robo\UseCase;
 
-
 use Webmozart\Assert\Assert;
 
+/**
+ * Commando para crear archivos
+ */
 class CreateFileCommmand implements CommandInterface
 {
 
@@ -33,6 +35,13 @@ class CreateFileCommmand implements CommandInterface
      */
     private $force;
 
+    /**
+     * CreateFileCommmand constructor.
+     *
+     * @param string $template
+     * @param string $filename
+     * @param bool $force
+     */
     public function __construct(string $template, string $filename, bool $force)
     {
         Assert::fileExists($template);
@@ -43,6 +52,8 @@ class CreateFileCommmand implements CommandInterface
     }
 
     /**
+     * Devuelve la template
+     *
      * @return string
      */
     public function getTemplate(): string
@@ -51,6 +62,8 @@ class CreateFileCommmand implements CommandInterface
     }
 
     /**
+     * Devuelve la ruta destino
+     *
      * @return string
      */
     public function getFilename(): string
@@ -59,6 +72,8 @@ class CreateFileCommmand implements CommandInterface
     }
 
     /**
+     * Indica si se va a sobreescribir el destino si ya existe
+     *
      * @return bool
      */
     public function isForce(): bool
@@ -66,15 +81,23 @@ class CreateFileCommmand implements CommandInterface
         return $this->force;
     }
 
-    
+    /**
+     * @inheritdoc
+     *
+     * @return string
+     */
     public function getSucessMessage(): string
     {
         return sprintf("file '%s' created sucessfully", $this->filename);
     }
 
+    /**
+     * @inheritdoc
+     *
+     * @return string
+     */
     public function getFailMessage(): string
     {
         return sprintf("file '%s' not created because already exists", $this->filename);
     }
-
 }

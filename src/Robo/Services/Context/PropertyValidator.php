@@ -13,24 +13,36 @@ declare(strict_types=1);
 
 namespace PlanB\Robo\Services\Context;
 
-
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validation;
 
+/**
+ * Comprueba que el valor de una propiedad sea correcto
+ */
 class PropertyValidator
 {
     /**
-     * @var Validation
+     * @var \Symfony\Component\Validator\Validation
      */
     private $validator;
 
+    /**
+     * PropertyValidator constructor.
+     */
     public function __construct()
     {
         $this->validator = Validation::createValidator();
     }
 
-
+    /**
+     * Comprueba que un valor es válido para la propiedad dada
+     *
+     * @param string|null $value
+     * @param \PlanB\Robo\Services\Context\Property $property
+     *
+     * @return bool
+     */
     public function validate(?string $value, Property $property): bool
     {
 
@@ -60,21 +72,27 @@ class PropertyValidator
     }
 
     /**
-     * @param ConstraintViolationList $violations
-     * @return string
+     * Devuelve el mensaje de error
+     *
+     * @param string|null $value
+     * @param \Symfony\Component\Validator\ConstraintViolationList $violations
+     *
+     * @return string|null
      */
     private function parseMessage(?string $value, ConstraintViolationList $violations): ?string
     {
-        if(empty($value)){
+        if ('' === $value || is_null($value)) {
             return null;
         }
 
         $messages = [];
+
         foreach ($violations as $violation) {
             $messages[] = $violation->getMessage();
         }
 
         $errorMessage = implode("\n", $messages);
+
         return sprintf("El valor '%s' no es correcto: \n%s", $value, $errorMessage);
     }
 }

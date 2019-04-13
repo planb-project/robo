@@ -21,9 +21,6 @@ declare(strict_types=1);
 
 namespace PlanB\Robo\Services;
 
-use PlanB\Robo\Services\Context\Context;
-use PlanB\Robo\Services\Context\NotStorablePropertyInterface;
-use PlanB\Robo\Services\Context\Property;
 use PlanB\Robo\Services\Exception\BadFormedJsonException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -31,8 +28,6 @@ use Webmozart\Assert\Assert;
 
 /**
  * Clase que nos permite leer y escribir valores de composer.json.
- *
- * @author Jose Manuel Pantoja <jmpantoja@gmail.com>
  */
 class ComposerFile
 {
@@ -42,7 +37,7 @@ class ComposerFile
     private $propertyAccess;
 
     /**
-     * @var mixed[]
+     * @var array<mixed>
      */
     private $contents;
 
@@ -57,7 +52,7 @@ class ComposerFile
     private $changed = false;
 
     /**
-     * @var string[]
+     * @var array<string>
      */
     private $keyOrder = [];
 
@@ -77,7 +72,7 @@ class ComposerFile
             '[config][optimize-autoloader]' => true,
             '[config][sort-packages]' => true,
             '[config][apcu-autoloader]' => true,
-            '[config][bin-dir]' => 'bin'
+            '[config][bin-dir]' => 'bin',
         ];
 
         $this->apply($defaults);
@@ -136,14 +131,16 @@ class ComposerFile
     }
 
     /**
-     * Configura el apartado config para optimizar composer.
+     * @param array<string> $values Configura el apartado config para optimizar composer.
      */
     private function apply(array $values): void
     {
         foreach ($values as $key => $value) {
-            if (!$this->get($key)) {
-                $this->set($key, $value);
+            if ($this->get($key)) {
+                continue;
             }
+
+            $this->set($key, $value);
         }
     }
 
@@ -156,11 +153,17 @@ class ComposerFile
      */
     public function get(string $path)
     {
-
         return $this->propertyAccess->getValue($this->contents, $path);
     }
 
-
+    /**
+     * Añade una entrada al apartado autoload/psr-4
+     *
+     * @param string $namespace
+     * @param string $dirname
+     *
+     * @return \PlanB\Robo\Services\ComposerFile
+     */
     public function addAutoloadPsr4(string $namespace, string $dirname): self
     {
         if ($this->has('[autoload][psr-4]')) {
@@ -171,6 +174,7 @@ class ComposerFile
         $value = sprintf('src/%s', $dirname);
 
         $this->set($key, $value);
+
         return $this;
     }
 
@@ -180,7 +184,7 @@ class ComposerFile
      * @param string $path
      * @param mixed $value
      *
-     * @return \PlanB\Wand\Core\Context\ComposerInfo
+     * @return \PlanB\Robo\Services\ComposerFile
      */
     public function set(string $path, $value): self
     {
@@ -193,7 +197,7 @@ class ComposerFile
     /**
      * Indica si un path tiene valor.
      *
-     * @param \PlanB\Wand\Core\Context\Property $property
+     * @param string $path
      *
      * @return bool
      */
@@ -229,14 +233,14 @@ class ComposerFile
     /**
      * Ordena los valores por clave, segun el orden defindo en 'keyOrder'.
      *
-     * @return mixed[]
+     * @return array<mixed>
      */
     private function getSortedValues(): array
     {
         $keys = array_flip($this->keyOrder);
         $contents = $this->contents;
 
-        uksort($contents, function ($first, $second) use ($keys) {
+        uksort($contents, static function ($first, $second) use ($keys) {
             $firstWeight = $keys[$first] ?? 100;
             $secondWeight = $keys[$second] ?? 100;
 

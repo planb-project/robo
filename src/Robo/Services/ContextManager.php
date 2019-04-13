@@ -13,38 +13,23 @@ declare(strict_types=1);
 
 namespace PlanB\Robo\Services;
 
-use JakubOnderka\PhpParallelLint\ArrayIterator;
-use JsonSchema\Constraints\Constraint;
-use League\CLImate\CLImate;
-use PlanB\Robo\Services\ComposerFile;
-use PlanB\Robo\Services\Context\ChoosablePropertyInterface;
 use PlanB\Robo\Services\Context\Context;
-use PlanB\Robo\Services\Context\NotStorablePropertyInterface;
-use PlanB\Robo\Services\Context\PropertyList;
 use PlanB\Robo\Services\Context\Property;
+use PlanB\Robo\Services\Context\PropertyList;
 use PlanB\Robo\Services\Context\PropertyValidator;
-use PlanB\Robo\Services\Context\ValidablePropertyInterface;
-use PlanB\Wand\Core\Context\Property\PropertyCollection;
-use PlanB\Wand\Core\Logger\LogManager;
-use PlanB\Wand\Core\Path\PathManager;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Validation;
-use Webmozart\Assert\Assert;
 
 /**
  * Gestiona el contenido de composer.json.
- *
- * @author Jose Manuel Pantoja <jmpantoja@gmail.com>
  */
 class ContextManager
 {
     /**
-     * @var CLImate
+     * @var \League\CLImate\CLImate
      */
     private $console;
 
     /**
-     * @var \PlanB\Wand\Core\Context\Property[]
+     * @var array<\PlanB\Wand\Core\Context\Property>
      */
     private $properties = [];
 
@@ -55,7 +40,8 @@ class ContextManager
 
     /**
      * ContextManager constructor.
-     * @param CLImate $console
+     *
+     * @param \PlanB\Robo\Services\CLImate $console
      */
     public function __construct(ConsoleManager $console)
     {
@@ -66,6 +52,10 @@ class ContextManager
 
     /**
      * Devuelve un array con el contexto asociado a un archivo composer.json
+     *
+     * @param \PlanB\Robo\Services\ComposerFile $composerFile
+     *
+     * @return \PlanB\Robo\Services\Context\Context
      */
     public function parse(ComposerFile $composerFile): Context
     {
@@ -80,10 +70,17 @@ class ContextManager
         $this->applyContext($composerFile, $context);
 
         $composerFile->save();
+
         return $context;
     }
 
-    private function applyContext(ComposerFile $composerFile, Context $context)
+    /**
+     * Añade valores inferidos del contexto
+     *
+     * @param \PlanB\Robo\Services\ComposerFile $composerFile
+     * @param \PlanB\Robo\Services\Context\Context $context
+     */
+    private function applyContext(ComposerFile $composerFile, Context $context): void
     {
         $namespace = $context->get(':namespace');
         $dirname = $context->get(':path_to_namespace');
@@ -94,10 +91,11 @@ class ContextManager
     /**
      * Devuelve el valor que corresponde a la propiedad pasada.
      *
+     * @param \PlanB\Robo\Services\Context\Property $property
      * @param \PlanB\Robo\Services\ComposerFile $composerFile
-     * @param Property $property
+     * @param array<mixed> $context
      *
-     * @return null|string
+     * @return string|null
      */
     private function resolve(Property $property, ComposerFile $composerFile, array $context): ?string
     {
@@ -110,6 +108,7 @@ class ContextManager
         }
 
         $composerFile->set($path, $value);
+
         return $value;
     }
 }

@@ -13,19 +13,23 @@ declare(strict_types=1);
 
 namespace PlanB\Robo\Task;
 
-
 use League\CLImate\CLImate;
 use PlanB\Robo\Services\ConsoleManager;
 use PlanB\Robo\Services\ContextManager;
 use PlanB\Robo\Services\PathManager;
-use Symfony\Component\Console\Helper\QuestionHelper;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Question\Question;
+use Robo\Collection\CollectionBuilder;
 
-trait loadTasks
+/**
+ * Trait con las nuevas tareas
+ */
+trait LoadTasks
 {
-    protected function taskBoilerplate()
+    /**
+     * Crea la tarea Boilerplate
+     *
+     * @return \Robo\Collection\CollectionBuilder
+     */
+    protected function taskBoilerplate(): CollectionBuilder
     {
         $pathManager = new PathManager('.');
 
@@ -34,5 +38,4 @@ trait loadTasks
 
         return $this->task(Boilerplate::class, $pathManager, $contextManager);
     }
-
 }

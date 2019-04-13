@@ -17,26 +17,36 @@ use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * Propiedad package name.
- *
- * @author Jose Manuel Pantoja <jmpantoja@gmail.com>
  */
 class PackageNameProperty extends Property implements ValidablePropertyInterface
 {
 
     public const PATTERN = '#([A-Za-z0-9][A-Za-z0-9_.-]*)/([A-Za-z0-9][A-Za-z0-9_.-]*)#';
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
     public function getPath(): string
     {
         return '[name]';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
     public function getPrompt(): string
     {
         return 'Package Name';
     }
 
     /**
-     * @return array<Constraint>
+     * {@inheritdoc}
+     *
+     * @param \PlanB\Robo\Services\Context\ConstraintList $constraintList
      */
     public function configConstraintList(ConstraintList $constraintList): void
     {
@@ -45,18 +55,23 @@ class PackageNameProperty extends Property implements ValidablePropertyInterface
         $constraintList->addConstraint($regex);
     }
 
-
+    /**
+     * {@inheritdoc}
+     *
+     * @param array<mixed> $context
+     *
+     * @return string|null
+     */
     public function getDefault(array $context): ?string
     {
         $vendor =  getenv('VENDOR');
 
         $vendor =  strtolower($vendor);
 
-        if(is_null($vendor)){
+        if (is_null($vendor)) {
             return null;
         }
 
         return sprintf('%s/%s', $vendor, $context['github_repository_name']);
-
     }
 }

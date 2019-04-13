@@ -8,14 +8,13 @@
  * file that was distributed with this source code.
  */
 
-
 namespace PlanB\Robo\Services\Context;
 
 use PlanB\Robo\Services\Context\Property\AuthorEmailProperty;
 use PlanB\Robo\Services\Context\Property\AuthorHomepageProperty;
 use PlanB\Robo\Services\Context\Property\AuthorNameProperty;
-use PlanB\Robo\Services\Context\Property\GithubRepositorynameProperty;
 use PlanB\Robo\Services\Context\Property\GithubOrganizationProperty;
+use PlanB\Robo\Services\Context\Property\GithubRepositorynameProperty;
 use PlanB\Robo\Services\Context\Property\LicenseProperty;
 use PlanB\Robo\Services\Context\Property\PackageDescriptionProperty;
 use PlanB\Robo\Services\Context\Property\PackageNameProperty;
@@ -23,11 +22,12 @@ use PlanB\Robo\Services\Context\Property\PackageTypeProperty;
 
 /**
  * Gestiona el listado de propiedades
- *
- * @author Jose Manuel Pantoja <jmpantoja@gmail.com>
  */
 class PropertyList extends \ArrayIterator
 {
+    /**
+     * PropertyList constructor.
+     */
     public function __construct()
     {
         $properties = [];
@@ -46,6 +46,5 @@ class PropertyList extends \ArrayIterator
         $properties['license'] = LicenseProperty::make();
 
         parent::__construct($properties, 0);
-
     }
 }

@@ -1,4 +1,5 @@
+.planb/
 .idea/
+build/
 vendor/
-bin/
-
+var/cache/

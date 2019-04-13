@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the planb project.
@@ -15,17 +15,25 @@ use PlanB\Robo\Services\Context\Property;
 
 /**
  * Propiedad package description.
- *
- * @author Jose Manuel Pantoja <jmpantoja@gmail.com>
  */
 class PackageDescriptionProperty extends Property
 {
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
     public function getPath(): string
     {
         return '[description]';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
     public function getPrompt(): string
     {
         return 'Package Description';

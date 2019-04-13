@@ -17,30 +17,45 @@ use Symfony\Component\Validator\Constraints\Url;
 
 /**
  * Propiedad Author Homepage.
- *
- * @author Jose Manuel Pantoja <jmpantoja@gmail.com>
  */
 class AuthorHomepageProperty extends Property implements ValidablePropertyInterface
 {
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
     public function getPath(): string
     {
         return '[authors][0][homepage]';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
     public function getPrompt(): string
     {
         return 'Author website';
     }
 
     /**
-     * @return array<Constraint>
+     *  {@inheritdoc}
+     *
+     * @param \PlanB\Robo\Services\Context\ConstraintList $constraintList
      */
     public function configConstraintList(ConstraintList $constraintList): void
     {
         $constraintList->addConstraint(new Url());
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return string|null
+     */
     public function getDefault(array $context): ?string
     {
         return sprintf('https://github.com/%s/', $context['github_organization']);

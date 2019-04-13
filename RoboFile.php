@@ -10,7 +10,7 @@ use \Webmozart\Assert\Assert;
 class RoboFile extends \PlanB\Robo\RoboBase
 {
 
-    use \PlanB\Robo\Task\loadTasks;
+    use \PlanB\Robo\Task\LoadTasks;
 
     public function getDevPackages(): array
     {

@@ -13,10 +13,13 @@ declare(strict_types=1);
 
 namespace PlanB\Robo\Services;
 
-
 use PlanB\Robo\Services\Exception\PathException;
+use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\PathUtil\Path;
 
+/**
+ * Gestiona las rutas del proyecto
+ */
 class PathManager
 {
     /**
@@ -24,11 +27,30 @@ class PathManager
      */
     private $pathToProject;
 
+    /**
+     * @var \Symfony\Component\Filesystem\Filesystem
+     */
+    private $fileSystem;
+
+
+    /**
+     * PathManager constructor.
+     *
+     * @param string $pathToProject
+     */
     public function __construct(string $pathToProject)
     {
         $this->pathToProject = realpath($pathToProject);
+        $this->fileSystem = new Filesystem();
     }
 
+    /**
+     * Resuelve una ruta
+     *
+     * @param string $path
+     *
+     * @return string|array<string>|null
+     */
     public function resolve(string $path)
     {
         $count = 0;
@@ -37,15 +59,21 @@ class PathManager
 
         $resolvedPath = preg_replace($patterns, $replacements, $path, -1, $count);
 
-        if ($count !== 1) {
-            $available = $this->getAvaiables();
-            throw  PathException::fromPath($path, $available);
+        if (1 !== $count) {
+            $available = $this->getPrefixNames();
+
+            throw  PathException::invalidPrefix($path, $available);
         }
 
         return $resolvedPath;
     }
 
-    private function getSubstitutions(): array
+    /**
+     * Devuelve los prefijos
+     *
+     * @return array<string>
+     */
+    private function getPrefixes(): array
     {
         $pathToProject = $this->pathToProject;
 
@@ -57,33 +85,66 @@ class PathManager
             '@config/' => $pathToPlanB,
             '@tests/' => $pathToTests,
             '@@/' => $pathToSource,
-            '@/' => $pathToProject
+            '@/' => $pathToProject,
         ];
     }
 
-    private function getAvaiables()
+    /**
+     * Devuelve una lista con los nombres de los prefijos
+     *
+     * @return array<string>
+     */
+    private function getPrefixNames(): array
     {
-        $substitutions = $this->getSubstitutions();
-        return array_keys($substitutions);
+        $prefixes = $this->getPrefixes();
+
+        return array_keys($prefixes);
     }
 
-    private function getPatterns()
+    /**
+     * Devuelve una lista con los patrones para hacer la sustituciones
+     *
+     * @return array<string>
+     */
+    private function getPatterns(): array
     {
-        $substitutions = $this->getSubstitutions();
-        $patterns = array_keys($substitutions);
 
-        return array_map(function ($pattern) {
-            return sprintf('#^%s#', $pattern);
-        }, $patterns);
+        $prefixNames = $this->getPrefixNames();
 
+        return array_map(static function ($prefix) {
+            return sprintf('#^%s#', $prefix);
+        }, $prefixNames);
     }
 
+    /**
+     * Devuelve una lista con los valores de reemplazo  para hacer las sustituciones
+     *
+     * @return array<string>
+     */
     private function getReplacements(): array
     {
-        $substitutions = $this->getSubstitutions();
+        $values = $this->getPrefixes();
 
-        return array_map(function ($value) {
+        return array_map(static function ($value) {
             return sprintf('%s/', $value);
-        }, $substitutions);
+        }, $values);
+    }
+
+    /**
+     * Devuelve un objeto ComposerFile
+     *
+     * @param string $path
+     *
+     * @return \PlanB\Robo\Services\ComposerFile
+     */
+    public function getComposerFile(string $path = '@/composer.json'): ComposerFile
+    {
+        $path = $this->resolve($path);
+
+        if (!$this->fileSystem->exists($path)) {
+            $this->fileSystem->dumpFile($path, '{}');
+        }
+
+        return new ComposerFile($path);
     }
 }
