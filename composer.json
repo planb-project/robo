@@ -11,7 +11,6 @@
         }
     ],
     "require": {
-        "behat/behat": "^3.5",
         "composer/composer": "^1.8",
         "consolidation/robo": "^1.4",
         "edgedesign/phpqa": "^1.20",
@@ -32,6 +31,10 @@
         "webmozart/path-util": "^2.3"
     },
     "require-dev": {
+        "behat/behat": "^3.5",
+        "ciaranmcnulty/phpspec-typehintedmethods": "^4.0",
+        "leanphp/phpspec-code-coverage": "dev-upgrade",
+        "memio/spec-gen": "^0.9.0",
         "phpspec/phpspec": "^5.1",
         "symfony/var-dumper": "^4.2"
     },
@@ -50,5 +53,9 @@
     "extra": {
         "github_organization": "planb-project",
         "github_repository": "robo"
-    }
+    },
+    "repositories": [{
+            "type": "vcs",
+            "url": "https://github.com/shulard/phpspec-code-coverage.git"
+        }]
 }

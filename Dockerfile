@@ -4,11 +4,8 @@ ARG UNAME=user
 ARG UID=1000
 ARG GID=1000
 
-
 RUN addgroup -g ${GID} ${UNAME}
 RUN adduser -D -u ${UID} -G ${UNAME} ${UNAME}
-
-#USER $UNAME
 
 RUN apk update
 
@@ -16,50 +13,44 @@ RUN apk add --no-cache \
         ncurses-libs \
         ncurses \
         libxslt \
-        libxslt-dev
+        libxslt-dev \
+        autoconf \
+        alpine-sdk
 
 RUN docker-php-ext-install xsl
 
-RUN mkdir /global
-RUN mkdir /global/composer
-RUN mkdir /global/cache
+RUN pecl install xdebug-2.7.1 && docker-php-ext-enable xdebug
 
-ENV COMPOSER_CACHE_DIR=/global/cache
-ENV COMPOSER_HOME=/global/composer
+ENV HOME=/home/${UNAME}
+ENV COMPOSER_HOME="${HOME}/.composer"
+ENV COMPOSER_CACHE_DIR="${COMPOSER_HOME}/cache"
+
+ENV ROBO_HOME="/robo/"
+ENV PATH="${ROBO_HOME}/bin:${PATH}"
+
+RUN mkdir $ROBO_HOME
+RUN chown user:user $ROBO_HOME
+
+
+USER $UNAME
+
 RUN composer global require hirak/prestissimo
 
-RUN composer global require webmozart/assert \
-                            ramsey/uuid \
-                            marc-mabe/php-enum \
-                            symfony/var-dumper \
-                            phpspec/phpspec \
-                            behat/behat \
-                            memio/spec-gen \
-                            ciaranmcnulty/phpspec-typehintedmethods
+WORKDIR $ROBO_HOME
+COPY --chown=1000:1000 . $ROBO_HOME
 
-RUN chmod -R 777 /global
-
-RUN mkdir /main
-WORKDIR /main
-COPY composer.json composer.lock /main/
-COPY src /main/src/
-COPY views/sami /main/views/sami/
-COPY .planb /main/.planb/
-COPY RoboFile.php  /main/RoboFile.php
-
-COPY entrypoint.sh /main/entrypoint.sh
-RUN chmod +x /main/entrypoint.sh
+RUN chmod +x $ROBO_HOME/entrypoint.sh
 
 RUN composer install
-RUN chmod -R 777 /global/cache
+RUN if [ -f $ROBO_HOME/sami.phar ]; then \
+    curl -O http://get.sensiolabs.org/sami.phar; \
+    fi
 
-RUN curl -O http://get.sensiolabs.org/sami.phar && \
-    mv sami.phar /main/bin/sami && \
-    chmod +x /main/bin/sami
+RUN cp sami.phar $ROBO_HOME/bin/sami
+RUN chmod +x $ROBO_HOME/bin/sami
 
-
-ENV PATH="/main/bin:${PATH}"
 
 WORKDIR /app
-ENTRYPOINT ["/main/entrypoint.sh"]
+ENTRYPOINT ["/robo/entrypoint.sh"]
 CMD ["list"]
+

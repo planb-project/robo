@@ -24,7 +24,9 @@ return new Sami($iterator, array(
     'title' => 'Symfony2 API',
     'build_dir' => './docs/%version%',
     'cache_dir' => './var/cache/sami/%version%',
-    'template_dirs' => ['/main/views/sami/markdown'],
+    'template_dirs' => ['/robo/views/sami/markdown'],
 //    'remote_repository'    => new GitHubRemoteRepository('symfony/symfony', dirname($dir)),
     'default_opened_level' => 2,
 ));
+
+
