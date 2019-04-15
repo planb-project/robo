@@ -13,116 +13,132 @@ declare(strict_types=1);
 
 namespace PlanB\Robo\Task;
 
-use Composer\Factory;
-use League\CLImate\CLImate;
-use League\Tactician\Setup\QuickStart;
-use PlanB\Robo\Reader\ConsoleReader;
-use PlanB\Robo\Services\ComposerFile;
 use PlanB\Robo\Services\Context\Context;
 use PlanB\Robo\Services\ContextManager;
 use PlanB\Robo\Services\PathManager;
 use PlanB\Robo\UseCase\CommandInterface;
-use PlanB\Robo\UseCase\CopyDirectoryCommmand;
-use PlanB\Robo\UseCase\CopyDirectoryHandler;
-use PlanB\Robo\UseCase\CreateDirectoryCommmand;
-use PlanB\Robo\UseCase\CreateDirectoryHandler;
-use PlanB\Robo\UseCase\CreateFileCommmand;
 use PlanB\Robo\UseCase\CommmandBuilder;
-use PlanB\Robo\UseCase\CreateFileHandler;
 use Robo\Result;
 use Robo\Task\BaseTask;
-use Symfony\Component\Filesystem\Filesystem;
 
+/**
+ * Tarea para crear archivos y directorios
+ */
 class Boilerplate extends BaseTask
 {
+    /**
+     * @var array<\PlanB\Robo\UseCase\CommandInterface>
+     */
     private $commands = [];
 
-    private $fileSystem;
 
     /**
-     * @var PathManager
-     */
-    private $pathManager;
-
-    /**
-     * @var ContextManager
-     */
-    private $contextManager;
-
-    /**
-     * @var CommmandBuilder
+     * @var \PlanB\Robo\UseCase\CommmandBuilder
      */
     private $commmandBuilder;
 
     /**
+     * @var \PlanB\Robo\Services\Context\Context
+     */
+    private $context;
+
+    /**
+     * @var \League\Tactician\CommandBus
+     */
+    private $commandBus;
+
+    /**
      * Boilerplate constructor.
      *
-     * @param string $pathToProject
+     * @param \PlanB\Robo\Services\PathManager $pathManager
+     * @param \PlanB\Robo\Services\ContextManager $contextManager
      */
     public function __construct(PathManager $pathManager, ContextManager $contextManager)
     {
-
-        $this->fileSystem = new Filesystem();
-        $this->pathManager = $pathManager;
-        $this->contextManager = $contextManager;
-        $context = $this->getContext();
+        $context = $this->getContext($pathManager, $contextManager);
 
         $this->commmandBuilder = new CommmandBuilder($pathManager, $context);
-
-        $this->commandBus = QuickStart::create([
-            CreateFileCommmand::class => new CreateFileHandler($context),
-            CreateDirectoryCommmand::class => new CreateDirectoryHandler()
-        ]);
+        $this->commandBus = CommandBus::make($context);
     }
 
-
+    /**
+     * Devuelve el número de pasos
+     *
+     * @return int|void
+     */
     public function progressIndicatorSteps()
     {
         return count($this->commands);
     }
 
+    /**
+     * Crea un archivo a partir de una template
+     *
+     * @param string $template
+     * @param string $filename
+     * @param bool $force
+     *
+     * @return \PlanB\Robo\Task\Boilerplate
+     *
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     */
     public function file(string $template, string $filename, bool $force = false): self
     {
         $command = $this->commmandBuilder->buildCreateFileCommand($template, $filename, $force);
         $this->commands[] = $command;
+
         return $this;
     }
 
-    public function copyDir(string $origin, string $target){
-        $command = $this->commmandBuilder->buildCopyDirectoryCommand($origin, $target);
-        $this->commands[] = $command;
-        return $this;
-    }
-
+    /**
+     * Crea un directorio
+     *
+     * @param string $dirname
+     *
+     * @return \PlanB\Robo\Task\Boilerplate
+     */
     public function dir(string $dirname): self
     {
         $command = $this->commmandBuilder->buildCreateDirectoryCommand($dirname);
         $this->commands[] = $command;
+
         return $this;
     }
 
-    public function run()
+    /**
+     * Ejecuta la tarea
+     *
+     * @return \Robo\Result
+     */
+    public function run(): Result
     {
         try {
             $this->tryRun();
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             return Result::fromException($this, $exception);
         }
 
         return new Result($this, 0, 'all files created', ['time' => $this->getExecutionTime()]);
     }
 
+    /**
+     * Ejecuta la tarea, sin capturar las excepciones
+     */
     private function tryRun(): void
     {
         $this->startProgressIndicator();
+
         foreach ($this->commands as $command) {
             $this->execute($command);
         }
+
         $this->stopProgressIndicator();
     }
 
     /**
-     * @param $fileDump
+     * Ejecuta un comando
+     *
+     * @param \PlanB\Robo\UseCase\CommandInterface $command
      */
     private function execute(CommandInterface $command): void
     {
@@ -130,25 +146,30 @@ class Boilerplate extends BaseTask
 
         if ($result) {
             $this->printTaskInfo($command->getSucessMessage());
+
             return;
         }
+
         $this->printTaskWarning($command->getFailMessage());
     }
 
     /**
-     * @return Context
+     * Devuevle el contexto
+     *
+     * @param \PlanB\Robo\Services\PathManager $pathManager
+     * @param \PlanB\Robo\Services\ContextManager $contextManager
+     *
+     * @return \PlanB\Robo\Services\Context\Context
      */
-    private function getContext(): Context
+    private function getContext(PathManager $pathManager, ContextManager $contextManager): Context
     {
-        $pathToComposer = $this->pathManager->resolve('@/composer.json');
-
-        if (!$this->fileSystem->exists($pathToComposer)) {
-            $this->fileSystem->dumpFile($pathToComposer, '{}');
+        if ($this->context instanceof Context) {
+            return $this->context;
         }
 
-        $composerFile = new ComposerFile($pathToComposer);
-        return $this->contextManager->parse($composerFile);
+        $composerFile = $pathManager->getComposerFile();
+        $this->context = $contextManager->parse($composerFile);
+
+        return $this->context;
     }
-
-
 }

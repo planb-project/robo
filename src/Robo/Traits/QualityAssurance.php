@@ -16,9 +16,19 @@ namespace PlanB\Robo\Traits;
 use Robo\Collection\CollectionBuilder;
 use Symfony\Component\Finder\Finder;
 
-trait QualityTrait
+/**
+ * Métodos relacionados con el control de calidad
+ */
+trait QualityAssurance
 {
-    protected function fixQuality(CollectionBuilder $collection, $dir = 'src')
+
+    /**
+     * Soluciona los errores de formato que puedan arreglarse automáticamente
+     *
+     * @param \Robo\Collection\CollectionBuilder $collection
+     * @param string $dir
+     */
+    protected function fixQuality(CollectionBuilder $collection, string $dir = 'src'): void
     {
         if (!$this->thereArePhpFiles($dir)) {
             return;
@@ -32,12 +42,16 @@ trait QualityTrait
                 ->option('config', '.')
                 ->option('tools', 'phpcbf'),
         ]);
-
     }
 
-    protected function checkQuality(CollectionBuilder $collection, $dir = 'src')
+    /**
+     * Comprueba la calidad del código
+     *
+     * @param \Robo\Collection\CollectionBuilder $collection
+     * @param string $dir
+     */
+    protected function checkQuality(CollectionBuilder $collection, string $dir = 'src'): void
     {
-
         if (!$this->thereArePhpFiles($dir)) {
             return;
         }
@@ -50,26 +64,32 @@ trait QualityTrait
                 //->option('tools', 'parallel-lint,phpcbf,phpcs,phploc,phpmd,pdepend,phpcpd,security-checker,phpmetrics')
                 ->option('tools', 'parallel-lint,phpcs,phploc,phpmd,pdepend,phpcpd,security-checker')
                 ->option('buildDir', './build/logs')
-                ->option('report')
+                ->option('report'),
         ]);
-
     }
 
-    protected function runAllTests(CollectionBuilder $collection)
+    /**
+     * Ejecuta todos los tests
+     *
+     * @param \Robo\Collection\CollectionBuilder $collection
+     */
+    protected function runAllTests(CollectionBuilder $collection): void
     {
 
         $collection->addTaskList([
             $this->taskExec('bin/behat'),
             $this->taskExec('bin/phpspec')->arg('run'),
         ]);
-
     }
 
     /**
-     * @param $dir
-     * @return int
+     * Indica si hay archivos php un directorio
+     *
+     * @param string $dir
+     *
+     * @return bool
      */
-    protected function thereArePhpFiles(string $dir): bool
+    private function thereArePhpFiles(string $dir): bool
     {
         $finder = new Finder();
         $total = $finder->files()->name('*.php')->in($dir)->count();

@@ -14,22 +14,36 @@ use PlanB\Robo\Services\Context\Property;
 
 /**
  * Propiedad author name.
- *
- * @author Jose Manuel Pantoja <jmpantoja@gmail.com>
  */
 class AuthorNameProperty extends Property
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
     public function getPath(): string
     {
         return '[authors][0][name]';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
     public function getPrompt(): string
     {
         return 'Author Name';
     }
 
-
+    /**
+     * {@inheritdoc}
+     *
+     * @param array<mixed> $context
+     *
+     * @return string|null
+     */
     public function getDefault(array $context): ?string
     {
         return getenv('USER_NAME');

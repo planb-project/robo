@@ -13,14 +13,14 @@ namespace PlanB\Robo\Services\Context;
 
 /**
  * Representa a las propiedades que tienen una validación específica.
- *
- * @author Jose Manuel Pantoja <jmpantoja@gmail.com>
  */
 interface ValidablePropertyInterface
 {
 
     /**
-     * @return array<Constraint>
+     * Configura los constraints de la propiedad
+     *
+     * @param \PlanB\Robo\Services\Context\ConstraintList $constraintList
      */
-    public function configConstraintList(ConstraintList $constraintList): void ;
+    public function configConstraintList(ConstraintList $constraintList): void;
 }

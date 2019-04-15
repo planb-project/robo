@@ -1,4 +1,4 @@
-# robo
+# planb/robo
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
@@ -7,36 +7,158 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what
-PSRs you support to avoid any confusion with users and contributors.
-
-## Structure
-
-If any of the following are applicable to your project, then the directory structure should follow industry best practices by being named the following.
-
-```
-bin/        
-config/
-src/
-tests/
-vendor/
-```
-
+custom cli task manager based on robo
 
 ## Install
 
 Via Composer
 
 ``` bash
-$ composer require PlanB/robo
+# vamos al directorio de trabajo
+$ cd /path/to/planb-project/robo
+
+# clonamos el repositorio
+$ git clone git@github.com:planb-project/robo.git .
+
+# Creamos la imagen de docker
+$ docker build --rm  -t  planb/robo .
 ```
 
 ## Usage
+Para usar la imagen docker que acabamos de crear como sin fuera un comando, creamos el siguiente script en **```/usr/local/bin/planb```**
 
-``` php
-$skeleton = new League\Skeleton();
-echo $skeleton->echoPhrase('Hello, League!');
+```bash
+$ chmod +x /usr/local/bin/planb
 ```
+
+
+``` bash
+ #!/bin/bash
+ 
+ USE_TTY=""
+ 
+ tty -s
+ if [ $? -eq 0 ]
+ then
+   USE_TTY="-t"
+ fi
+ 
+ docker run -a stdin -a stdout -i ${USE_TTY}  --rm \
+         --user $(id -u):$(id -g) \
+         --env "USER_NAME=<Nombre del usuario>" \
+         --env "USER_EMAIL=<Email >" \
+         --env "GITHUB_ORGANIZATION=<Nombre de la organiación en github>" \
+         --env "VENDOR=<El nombre del vendor principal>" \
+         --volume "$(pwd):/app" \
+         --volume "$HOME/.ssh:/home/user/.ssh" \
+         --volume "$HOME/.gitconfig:/home/user/.gitconfig" \
+         --volume "$COMPOSER_HOME:/home/user/.composer" \
+         --volume "$COMPOSER_CACHE_DIR:/home/user/.composer/cache" \
+         planb/robo:latest $@
+ exit $?
+
+```
+con cuidado de asignar correctamente los valores de las variables de entorno
+
+- USER_NAME: el nombre completo del usuario, 
+
+como queremos que aparezca en el path **```[authors][0][name]```** del archivo composer.json
+- USER_EMAIL: el correo electrónico
+
+como queremos que aparezca en el path **```[authors][0][email]```** del archivo composer.json
+
+- GITHUB_ORGANIZATION: El nombre de usuario o de la organiaación en github, como aqui:
+ 
+ > https://github.com/**<github_organization>**/**repo-name**
+    
+- VENDOR: El nombre del vendor, o namespace principal del proyecto. 
+
+Por ejemplo si el apartado **```[autoload]```** es algo asi:
+
+```json
+     "autoload": {
+        "psr-4": {
+            "PlanB\\Robo\\": "src/Robo/"
+        }
+    }
+```
+
+el vendor es **```PlanB```**
+
+
+### Ejemplo:
+Para proyectos propios sería algo asi:
+
+```bash
+#!/bin/bash
+
+USE_TTY=""
+
+tty -s
+if [ $? -eq 0 ]
+then
+  USE_TTY="-t"
+fi
+
+docker run -a stdin -a stdout -i ${USE_TTY}  --rm \
+        --user $(id -u):$(id -g) \
+        --env "USER_NAME=Jose Manuel Pantoja" \
+        --env "USER_EMAIL=jmpantoja@gmail.com" \
+        --env "GITHUB_ORGANIZATION=planb-project" \
+        --env "VENDOR=PlanB" \
+        --volume "$(pwd):/app" \
+        --volume "$HOME/.ssh:/home/user/.ssh" \
+        --volume "$HOME/.gitconfig:/home/user/.gitconfig" \
+        --volume "$COMPOSER_HOME:/home/user/.composer" \
+        --volume "$COMPOSER_CACHE_DIR:/home/user/.composer/cache" \
+        planb/robo:latest $@
+exit $?
+```
+
+## Comandos
+Por defecto se sumistran estos comandos:
+
+- planb **quality:assurance**
+    Ejecuta phpqa para evaluar la calidad del código. Se usa en el git-hook **``` pre-commit ```** 
+
+- planb **qa:check**
+
+    Ejecuta phpqa para evaluar la calidad del código, e intenta solucionar los errores de estilo  
+
+- planb **run:tests**
+
+    Lanza todos los tests (behat y phpspec)
+
+- planb **feature:start** name      
+
+    Inicia una feature
+
+- planb **feature:finish** name
+
+    Finaliza una feature     
+
+- planb **release:start**
+
+    Inicia una release
+
+- planb **release:finish**    
+
+    Finaliza la release despues de:
+    - Actualiza el fichero ```.semver```
+    - Actualiza el fichero ```CHANGELOG.md```
+    - Actualiza la documentación (sami)
+
+- planb **hotfix:start**       
+
+    Inicia un hotfix
+ 
+- planb **hotfix:finish**      
+
+    Finaliza el hotfix despues de:
+    - Actualiza el fichero ```.semver```
+    - Actualiza el fichero ```CHANGELOG.md```
+    - Actualiza la documentación (sami)
+ 
 
 ## Change log
 
@@ -45,7 +167,8 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 ## Testing
 
 ``` bash
-$ composer test
+$ bin/behat
+$ bin/phpspec
 ```
 
 ## Contributing
@@ -65,17 +188,17 @@ If you discover any security related issues, please email jmpantoja@gmail.com in
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/PlanB/robo.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/planb/robo.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/PlanB/robo/master.svg?style=flat-square
-[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/PlanB/robo.svg?style=flat-square
-[ico-code-quality]: https://img.shields.io/scrutinizer/g/PlanB/robo.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/PlanB/robo.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/planb-project/robo/master.svg?style=flat-square
+[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/planb-project/robo.svg?style=flat-square
+[ico-code-quality]: https://img.shields.io/scrutinizer/g/planb-project/robo.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/planb/robo.svg?style=flat-square
 
-[link-packagist]: https://packagist.org/packages/PlanB/robo
-[link-travis]: https://travis-ci.org/PlanB/robo
-[link-scrutinizer]: https://scrutinizer-ci.com/g/PlanB/robo/code-structure
-[link-code-quality]: https://scrutinizer-ci.com/g/PlanB/robo
-[link-downloads]: https://packagist.org/packages/PlanB/robo
-[link-author]: https://github.com/:author_username
+[link-packagist]: https://packagist.org/packages/planb/robo
+[link-travis]: https://travis-ci.org/planb-project/robo
+[link-scrutinizer]: https://scrutinizer-ci.com/g/planb-project/robo/code-structure
+[link-code-quality]: https://scrutinizer-ci.com/g/planb-project/robo
+[link-downloads]: https://packagist.org/packages/planb/robo
+[link-author]: https://github.com/planb-project/
 [link-contributors]: ../../contributors

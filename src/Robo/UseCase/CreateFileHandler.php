@@ -13,33 +13,49 @@ declare(strict_types=1);
 
 namespace PlanB\Robo\UseCase;
 
-use PlanB\Robo\Reader\ConsoleReader;
 use PlanB\Robo\Services\Context\Context;
 use Symfony\Component\Filesystem\Filesystem;
 
+/**
+ * Manejador para crear archivos
+ */
 class CreateFileHandler
 {
 
     /**
-     * @var array
+     * @var \PlanB\Robo\Services\Context\Context
      */
     private $context;
 
+    /**
+     * @var \Symfony\Component\Filesystem\Filesystem
+     */
     private $filesystem;
 
+    /**
+     * CreateFileHandler constructor.
+     *
+     * @param \PlanB\Robo\Services\Context\Context $context
+     */
     public function __construct(Context $context)
     {
         $this->context = $context;
         $this->filesystem = new Filesystem();
-
     }
 
+    /**
+     * Ejecuta el comando
+     *
+     * @param \PlanB\Robo\UseCase\CreateFileCommmand $command
+     *
+     * @return bool
+     */
     public function handle(CreateFileCommmand $command): bool
     {
         $template = $command->getTemplate();
         $filename = $command->getFilename();
 
-        if ($this->filesystem->exists($filename) AND !$command->isForce()) {
+        if ($this->filesystem->exists($filename) and !$command->isForce()) {
             return false;
         }
 
@@ -47,7 +63,7 @@ class CreateFileHandler
         $content = $this->context->replace($content);
 
         $this->filesystem->dumpFile($filename, $content);
+
         return true;
     }
-
 }

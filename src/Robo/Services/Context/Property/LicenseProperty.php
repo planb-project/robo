@@ -15,8 +15,6 @@ use PlanB\Robo\Services\Context\Property;
 
 /**
  * Propiedad License
- *
- * @author Jose Manuel Pantoja <jmpantoja@gmail.com>
  */
 class LicenseProperty extends Property implements ChoosablePropertyInterface
 {
@@ -32,11 +30,21 @@ class LicenseProperty extends Property implements ChoosablePropertyInterface
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
     public function getPath(): string
     {
         return '[license]';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
     public function getPrompt(): string
     {
         return 'License';

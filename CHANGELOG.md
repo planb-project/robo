@@ -1,5 +1,14 @@
 # Changelog
 
+#### v0.1.0
+
+* Issue #1. Arreglo las url del fichero README.md *2019-04-15*
+* Issue #1. Refactorizo Dokerfile *2019-04-15*
+* Issue #1. ajusto las plantillas de ci y añado las dependecias de phpspec y sus extensiones *2019-04-15*
+* Issue #1. Fix Quality *2019-04-15*
+* Issue #0. First Commit *2019-04-15*
+
+
 All notable changes to `robo` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.

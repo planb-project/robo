@@ -15,17 +15,25 @@ use PlanB\Robo\Services\Context\Property;
 
 /**
  * Propiedad package type.
- *
- * @author Jose Manuel Pantoja <jmpantoja@gmail.com>
  */
 class PackageTypeProperty extends Property implements ChoosablePropertyInterface
 {
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
     public function getPath(): string
     {
         return '[type]';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
     public function getPrompt(): string
     {
         return 'Package Type';
@@ -33,6 +41,8 @@ class PackageTypeProperty extends Property implements ChoosablePropertyInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function getOptions(): array
     {
@@ -43,5 +53,4 @@ class PackageTypeProperty extends Property implements ChoosablePropertyInterface
             'composer-plugin',
         ];
     }
-
 }

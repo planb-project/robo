@@ -13,11 +13,17 @@ declare(strict_types=1);
 
 namespace PlanB\Robo\Services;
 
-
+/**
+ * Gestiona la información proporcionada por git
+ */
 class GitManager
 {
-
-    public function getIssues()
+    /**
+     * Devuelve una lista con todos los commits con un Issue desde el último tag
+     *
+     * @return array<string>
+     */
+    public function getIssues(): array
     {
         $output = [];
         $command = 'git log --tags --simplify-by-decoration --pretty="format:%ci" --max-count=1';
@@ -26,15 +32,15 @@ class GitManager
 
 
         $keyword = 'Issue';
-        $pattern = sprintf('/.*(%s.*)?/', $keyword);
         $output = [];
         $command = sprintf('git log --all --after="%s" --oneline --grep="%s"', $lastTagDate, $keyword);
 
         exec($command, $output);
 
-        $issues = array_map(function ($line) use ($pattern) {
+        $issues = array_map(static function ($line) {
 
             $matches = [];
+
             if (preg_match('/Issue.*$/', $line, $matches)) {
                 return $matches[0];
             }
@@ -42,36 +48,53 @@ class GitManager
             return null;
         }, $output);
 
-
         return array_filter($issues);
     }
 
-    public function getTagVersion(string $name)
+    /**
+     * Devuelve el nombre de la release o el hotfix que este abierto actualmente
+     *
+     * @param string $name
+     *
+     * @return string
+     *
+     * @throws \Exception
+     */
+    public function getTagVersion(string $name): string
     {
         $pattern = sprintf('#%s/(.*)#', $name);
 
         $branchesByType = $this->getBranches($name);
 
-        $branches = array_map(function (string $branch) use ($pattern) {
+        $branches = array_map(static function (string $branch) use ($pattern) {
             $matches = [];
+
             if (preg_match($pattern, $branch, $matches)) {
                 return $matches[1];
-            };
+            }
 
             return null;
         }, $branchesByType);
 
         $branches = array_filter($branches);
 
-        if (count($branches) != 1) {
+        if (1 !== count($branches)) {
             $message = sprintf("La cantidad o el formato de las ramas %s no es consistente \n%s", $name, var_export($branchesByType, true));
+
             throw new \Exception($message);
         }
 
         return array_shift($branches);
     }
 
-    public function getBranches(string $name)
+    /**
+     * Devuelve una lista con todas las ramas de un tipo determinado
+     *
+     * @param string $name
+     *
+     * @return array<string>
+     */
+    public function getBranches(string $name): array
     {
         $output = [];
         $command = sprintf("git branch | grep -i %s", $name);

@@ -13,16 +13,22 @@ declare(strict_types=1);
 
 namespace PlanB\Robo\Services\Context;
 
-
-use JakubOnderka\PhpParallelLint\ArrayIterator;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Traversable;
 
+/**
+ * Colección de constraints para una propiedad
+ */
 class ConstraintList
 {
+    /**
+     * @var array<\Symfony\Component\Validator\Constraint>
+     */
     private $constraints = [];
 
+    /**
+     * ConstraintList constructor.
+     */
     public function __construct()
     {
         $notBlank = new NotBlank();
@@ -31,15 +37,20 @@ class ConstraintList
         $this->constraints[] = $notBlank;
     }
 
-    public function addConstraint(Constraint $constraint)
+    /**
+     * Agrega una constraint
+     *
+     * @param \Symfony\Component\Validator\Constraint $constraint
+     */
+    public function addConstraint(Constraint $constraint): void
     {
         $this->constraints[] = $constraint;
     }
 
     /**
-     * @return array<Constraint>
+     * @return array<\Symfony\Component\Validator\Constraint>
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->constraints;
     }

@@ -15,11 +15,34 @@ namespace PlanB\Robo\Traits;
 
 use Robo\Collection\CollectionBuilder;
 
-trait GitFlowTrait
+/**
+ * Métodos relacionados con git-flow
+ */
+trait GitFlow
 {
 
     use \Globalis\Robo\Task\GitFlow\loadTasks;
 
+    /**
+     * Indica si tenemos algun release o hotfix sin finalizar
+     *
+     * @return bool
+     */
+    private function thereAreAnyReleaseOrHotfix(): bool
+    {
+        $releases = $this->getGitManager()->getBranches(self::RELEASE);
+        $hotfixes = $this->getGitManager()->getBranches(self::HOTFIX);
+
+        return count($releases) > 0 || count($hotfixes) > 0;
+    }
+
+
+    /**
+     * Inicia una feature
+     *
+     * @param \Robo\Collection\CollectionBuilder $collection
+     * @param string $name
+     */
     protected function startFeature(CollectionBuilder $collection, string $name): void
     {
         $collection->addTaskList([
@@ -27,10 +50,16 @@ trait GitFlowTrait
                 ->developBranch('develop')
                 ->repository('origin')
                 ->prefixBranch(self::FEATURE)
-                ->fetchFlag(true)
+                ->fetchFlag(true),
         ]);
     }
 
+    /**
+     * Finaliza una feature
+     *
+     * @param \Robo\Collection\CollectionBuilder $collection
+     * @param string $name
+     */
     protected function finishFeature(CollectionBuilder $collection, string $name): void
     {
         $collection->addTaskList([
@@ -41,13 +70,19 @@ trait GitFlowTrait
                 ->rebaseFlag(true)
                 ->deleteBranchAfter(true)
                 ->prefixBranch(self::FEATURE)
-                ->pushFlag(true)
+                ->pushFlag(true),
         ]);
-
     }
 
-
-    protected function startRelease(CollectionBuilder $collection, string $tagName)
+    /**
+     * Inicia una release
+     *
+     * @param \Robo\Collection\CollectionBuilder $collection
+     * @param string $tagName
+     *
+     * @throws \Exception
+     */
+    protected function startRelease(CollectionBuilder $collection, string $tagName): void
     {
         if ($this->thereAreAnyReleaseOrHotfix()) {
             throw new \Exception('it is not possible to create a release while there are any release o hotfix started');
@@ -58,12 +93,18 @@ trait GitFlowTrait
                 ->developBranch('develop')
                 ->repository('origin')
                 ->fetchFlag(true)
-                ->prefixBranch(self::RELEASE)
+                ->prefixBranch(self::RELEASE),
         ]);
     }
 
 
-    protected function finishRelease(CollectionBuilder $collection, string $tagName)
+    /**
+     * Finaliza una release
+     *
+     * @param \Robo\Collection\CollectionBuilder $collection
+     * @param string $tagName
+     */
+    protected function finishRelease(CollectionBuilder $collection, string $tagName): void
     {
         $collection->addTaskList([
             $this->taskGitStack()
@@ -80,13 +121,20 @@ trait GitFlowTrait
                 ->prefixBranch(self::RELEASE)
                 ->noTag(false)
                 ->tagMessage(sprintf('tag %s created', $tagName))
-                ->pushFlag(true)
+                ->pushFlag(true),
 
         ]);
-
     }
 
-    protected function startHotfix(CollectionBuilder $collection, string $tagName)
+    /**
+     * Inicia un hotfix
+     *
+     * @param \Robo\Collection\CollectionBuilder $collection
+     * @param string $tagName
+     *
+     * @throws \Exception
+     */
+    protected function startHotfix(CollectionBuilder $collection, string $tagName): void
     {
         if ($this->thereAreAnyReleaseOrHotfix()) {
             throw new \Exception('it is not possible to create a hotfix while there are any release o hotfix started');
@@ -97,11 +145,17 @@ trait GitFlowTrait
                 ->masterBranch('master')
                 ->repository('origin')
                 ->fetchFlag(true)
-                ->prefixBranch(self::HOTFIX)
+                ->prefixBranch(self::HOTFIX),
         ]);
     }
 
-    protected function finishHotfix(CollectionBuilder $collection, string $tagName)
+    /**
+     * Finaliza un hotfix
+     *
+     * @param \Robo\Collection\CollectionBuilder $collection
+     * @param string $tagName
+     */
+    protected function finishHotfix(CollectionBuilder $collection, string $tagName): void
     {
 
         $collection->addTaskList([
@@ -119,9 +173,8 @@ trait GitFlowTrait
                 ->prefixBranch(self::HOTFIX)
                 ->noTag(false)
                 ->tagMessage(sprintf('tag %s created', $tagName))
-                ->pushFlag(true)
+                ->pushFlag(true),
 
         ]);
-
     }
 }

@@ -13,10 +13,22 @@ declare(strict_types=1);
 
 namespace PlanB\Robo\UseCase;
 
-
+/**
+ * Interfaz para comandos
+ */
 interface CommandInterface
 {
+    /**
+     * Devuelve el mensaje de exito
+     *
+     * @return string
+     */
     public function getSucessMessage(): string;
 
+    /**
+     * Devuelve el mensaje de error
+     *
+     * @return string
+     */
     public function getFailMessage(): string;
 }

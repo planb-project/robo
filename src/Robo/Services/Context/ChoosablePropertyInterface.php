@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace PlanB\Robo\Services\Context;
 
-
+/**
+ * Propiedad que elije su valor entre una lista de opciones
+ */
 interface ChoosablePropertyInterface
 {
     /**

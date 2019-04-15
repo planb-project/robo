@@ -17,23 +17,33 @@ use Symfony\Component\Validator\Constraints\Email;
 
 /**
  * Propiedad author email.
- *
- * @author Jose Manuel Pantoja <jmpantoja@gmail.com>
  */
 class AuthorEmailProperty extends Property implements ValidablePropertyInterface
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
     public function getPath(): string
     {
         return '[authors][0][email]';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
     public function getPrompt(): string
     {
         return 'Author Email';
     }
 
     /**
-     * @return array<Constraint>
+     * {@inheritdoc}
+     *
+     * @param \PlanB\Robo\Services\Context\ConstraintList $constraintList
      */
     public function configConstraintList(ConstraintList $constraintList): void
     {
@@ -42,6 +52,13 @@ class AuthorEmailProperty extends Property implements ValidablePropertyInterface
         $constraintList->addConstraint($email);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @param array<mixed> $context
+     *
+     * @return string|null
+     */
     public function getDefault(array $context): ?string
     {
         return getenv('USER_EMAIL');
