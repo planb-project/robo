@@ -118,6 +118,9 @@ class Context implements \IteratorAggregate
         [, $vendor, $package] = $matches;
 
         $this->addValues($vendor, $package);
+
+        $this->addPackageFullName();
+        $this->addRepoFullname();
     }
 
     /**
@@ -137,12 +140,7 @@ class Context implements \IteratorAggregate
         $this->set('vendor', $vendor);
         $this->set('package_name', $package);
 
-        $fullName = strtolower(sprintf('%s/%s', $vendor, $package));
-        $this->set('package_fullname', $fullName);
-
-
         $package = $this->normalize($package);
-
         $this->set('namespace', sprintf('%s\%s\\', $vendor, $package));
         $this->set('path_to_namespace', ucfirst($package));
     }
@@ -166,5 +164,29 @@ class Context implements \IteratorAggregate
         }
 
         return ucfirst($value);
+    }
+
+    /**
+     * Añade la propiedad package_fullname
+     */
+    private function addPackageFullName(): void
+    {
+        $vendor = $this->values[':vendor'];
+        $package = $this->values[':package_name'];
+
+        $fullName = strtolower(sprintf('%s/%s', $vendor, $package));
+        $this->set('package_fullname', $fullName);
+    }
+
+    /**
+     * Añade la propiedad repository_fullname
+     */
+    private function addRepoFullname(): void
+    {
+        $package = $this->values[':package_name'];
+
+        $organization = $this->values[':github_organization'];
+        $fullRepoName = strtolower(sprintf('%s/%s', $organization, $package));
+        $this->set('repository_fullname', $fullRepoName);
     }
 }

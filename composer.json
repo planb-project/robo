@@ -54,8 +54,10 @@
         "github_organization": "planb-project",
         "github_repository": "robo"
     },
-    "repositories": [{
+    "repositories": [
+        {
             "type": "vcs",
             "url": "https://github.com/shulard/phpspec-code-coverage.git"
-        }]
+        }
+    ]
 }

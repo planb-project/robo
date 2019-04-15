@@ -53,15 +53,15 @@ The MIT License (:license). Please see [License File](LICENSE.md) for more infor
 
 [ico-version]: https://img.shields.io/packagist/v/:package_fullname.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/:package_fullname/master.svg?style=flat-square
-[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/:package_fullname.svg?style=flat-square
-[ico-code-quality]: https://img.shields.io/scrutinizer/g/:package_fullname.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/:repository_fullname/master.svg?style=flat-square
+[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/:repository_fullname.svg?style=flat-square
+[ico-code-quality]: https://img.shields.io/scrutinizer/g/:repository_fullname.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/:package_fullname.svg?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/:package_fullname
-[link-travis]: https://travis-ci.org/:package_fullname
-[link-scrutinizer]: https://scrutinizer-ci.com/g/:package_fullname/code-structure
-[link-code-quality]: https://scrutinizer-ci.com/g/:package_fullname
+[link-travis]: https://travis-ci.org/:repository_fullname
+[link-scrutinizer]: https://scrutinizer-ci.com/g/:repository_fullname/code-structure
+[link-code-quality]: https://scrutinizer-ci.com/g/:repository_fullname
 [link-downloads]: https://packagist.org/packages/:package_fullname
 [link-author]: :author_website
 [link-contributors]: ../../contributors
