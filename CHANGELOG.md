@@ -1,5 +1,10 @@
 # Changelog
 
+#### v0.1.1
+
+* Issue #1. Ajustes en phpcs.xml *2019-04-18*
+
+
 #### v0.1.0
 
 * Issue #1. Arreglo las url del fichero README.md *2019-04-15*
