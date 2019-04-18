@@ -18,6 +18,7 @@
         <exclude name="SlevomatCodingStandard.ControlStructures.DisallowYodaComparison"/>
         <exclude name="SlevomatCodingStandard.Classes.EmptyLinesAroundClassBraces"/>
         <exclude name="SlevomatCodingStandard.TypeHints.DisallowMixedTypeHint"/>
+        <exclude name="SlevomatCodingStandard.TypeHints.DisallowArrayTypeHintSyntax"/>
         <exclude name="Symfony.Commenting.FunctionComment.SpacingAfterParamType"/>
         <exclude name="SlevomatCodingStandard.ControlStructures.NewWithoutParentheses.UselessParentheses"/>
         <exclude name="SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter"/>
