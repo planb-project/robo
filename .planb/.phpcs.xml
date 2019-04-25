@@ -5,7 +5,6 @@
         <exclude name="Symfony.Commenting.Annotations"/>
         <exclude name="Symfony.Functions.ScopeOrder"/>
         <exclude name="Symfony.NamingConventions.ValidClassName"/>
-        <exclude name="Symfony.WhiteSpace.DiscourageFitzinator"/>
     </rule>
 
     <rule ref="/robo/vendor/slevomat/coding-standard/SlevomatCodingStandard/ruleset.xml">
