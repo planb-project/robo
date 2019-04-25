@@ -56,17 +56,24 @@ trait QualityAssurance
             return;
         }
 
+        $tools = implode(',', $this->getQualityTools());
         $collection->addTaskList([
             $this->taskExec('phpqa')
                 ->option('analyzedDirs', $dir)
                 ->option('ignoredDirs', './vendor')
                 ->option('config', '.')
-                //->option('tools', 'parallel-lint,phpcbf,phpcs,phploc,phpmd,pdepend,phpcpd,security-checker,phpmetrics')
-                ->option('tools', 'parallel-lint,phpcs,phploc,phpmd,pdepend,phpcpd,security-checker')
+                ->option('tools', $tools)
                 ->option('buildDir', './build/logs')
                 ->option('report'),
         ]);
     }
+
+    /**
+     * Devuelve la lista de herramietas de qa que vamos a aplicar
+     *
+     * @return array<string>
+     */
+    abstract public function getQualityTools(): array;
 
     /**
      * Ejecuta todos los tests

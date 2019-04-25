@@ -29,19 +29,43 @@ class RoboFile extends \PlanB\Robo\RoboBase
         ];
     }
 
-    public function init()
+    public function getQualityTools(): array
     {
+        return [
+            'parallel-lint',
+            'phpcs',
+            'phploc',
+            'phpmd',
+            'pdepend',
+            'phpcpd',
+//            'security-checker',
+//            'phpmetrics'
+        ];
+
+    }
+
+    public function init(?string $type = null)
+    {
+        Assert::oneOf($type, [null, 'module']);
+
         $collection = $this->collectionBuilder();
 
+
         $this->initQa($collection);
-        $this->initSami($collection);
-        $this->initCi($collection);
         $this->initComposer($collection);
         $this->initBehat($collection);
         $this->initPhpSpec($collection);
         $this->initProject($collection);
-        $this->initGit($collection);
-        $this->initHooks($collection);
+
+        if ($type !== 'module') {
+            $this->initMetadata($collection);
+            $this->initSami($collection);
+            $this->initCi($collection);
+            $this->initProject($collection);
+            $this->initGit($collection);
+            $this->initHooks($collection);
+        }
+
         $this->composerUpdate($collection);
 
         return $collection->run();
@@ -138,4 +162,5 @@ class RoboFile extends \PlanB\Robo\RoboBase
 
         return $collection->run();
     }
+
 }

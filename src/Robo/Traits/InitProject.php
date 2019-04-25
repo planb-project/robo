@@ -45,6 +45,8 @@ trait InitProject
     {
         $collection->addTaskList([
             $this->taskBoilerplate()
+                ->dir('@/var')
+                ->dir('@/docs')
                 ->file('@config/sami.php', '@/.sami.php'),
         ]);
     }
@@ -203,19 +205,31 @@ trait InitProject
     {
         $collection->addTaskList([
             $this->taskBoilerplate()
-                ->dir('@/var')
-                ->dir('@/docs')
                 ->dir('@@/:path_to_namespace')
                 ->file('@config/templates/.editorconfig', '@/.editorconfig')
                 ->file('@config/templates/.semver', '@/.semver')
                 ->file('@config/templates/CHANGELOG.md', '@/CHANGELOG.md')
+                ->file('@config/templates/license/:license.md', '@/LICENSE.md')
+                ->file('@config/templates/README.md', '@/README.md')
+                ->file('@config/templates/.gitattributes', '@/.gitattributes')
+                ->file('@config/templates/.gitignore', '@/.gitignore'),
+        ]);
+    }
+
+    /**
+     * Inicializa los archivos con meta información sobre el proyecto
+     *
+     * @param \Robo\Collection\CollectionBuilder $collection
+     */
+    protected function initMetadata(CollectionBuilder $collection): void
+    {
+        $collection->addTaskList([
+            $this->taskBoilerplate()
                 ->file('@config/templates/CODE_OF_CONDUCT.md', '@/CODE_OF_CONDUCT.md')
                 ->file('@config/templates/CONTRIBUTING.md', '@/CONTRIBUTING.md')
                 ->file('@config/templates/CODE_OF_CONDUCT.md', '@/CODE_OF_CONDUCT.md')
                 ->file('@config/templates/ISSUE_TEMPLATE.md', '@/ISSUE_TEMPLATE.md')
-                ->file('@config/templates/license/:license.md', '@/LICENSE.md')
-                ->file('@config/templates/PULL_REQUEST_TEMPLATE.md', '@/PULL_REQUEST_TEMPLATE.md')
-                ->file('@config/templates/README.md', '@/README.md'),
+                ->file('@config/templates/PULL_REQUEST_TEMPLATE.md', '@/PULL_REQUEST_TEMPLATE.md'),
         ]);
     }
 
