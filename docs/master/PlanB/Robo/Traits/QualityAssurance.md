@@ -47,6 +47,17 @@ protected **QualityAssurance::checkQuality**([CollectionBuilder](../../../Collec
 ---
 
 
+### getQualityTools
+Devuelve la lista de herramietas de qa que vamos a aplicar
+
+
+abstract **QualityAssurance::getQualityTools**() : array
+
+
+
+---
+
+
 ### runAllTests
 Ejecuta todos los tests
 

@@ -129,6 +129,20 @@ protected **InitProject::initProject**([CollectionBuilder](../../../CollectionBu
 ---
 
 
+### initMetadata
+Inicializa los archivos con meta información sobre el proyecto
+
+
+protected **InitProject::initMetadata**([CollectionBuilder](../../../CollectionBuilder.md) $collection) : void
+
+
+|Parameters: | | |
+| --- | --- | --- |
+|[CollectionBuilder](../../../CollectionBuilder.md) |$collection |  |
+
+---
+
+
 ### initGit
 Inicializa git
 

@@ -1,5 +1,10 @@
 # Changelog
 
+#### v0.1.2
+
+* Issue #1. Ajustes en initProject *2019-04-25*
+
+
 #### v0.1.1
 
 * Issue #1. Ajustes en phpcs.xml *2019-04-18*
